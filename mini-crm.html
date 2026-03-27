@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini CRM - Client Lead Management</title>
+<style>
+body{font-family:Arial;margin:0;background:#f4f4f4}
+header{background:#0f172a;color:white;padding:20px;text-align:center}
+.container{max-width:900px;margin:auto;padding:30px}
+.card{background:white;padding:20px;border-radius:10px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+input,select{width:100%;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:6px}
+button{padding:10px 15px;border:none;background:#2563eb;color:white;border-radius:6px;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:20px}
+th,td{border:1px solid #ddd;padding:10px;text-align:center}
+th{background:#e5e7eb}
+</style>
+</head>
+<body><header>
+<h1>Client Lead Management System (Mini CRM)</h1>
+<p>Manage business leads and contacts</p>
+</header><div class="container"><div class="card">
+<h2>Add New Lead</h2>
+<input type="text" id="name" placeholder="Client Name">
+<input type="email" id="email" placeholder="Client Email">
+<select id="status">
+<option>New</option>
+<option>Contacted</option>
+<option>Converted</option>
+</select>
+<button onclick="addLead()">Add Lead</button>
+</div><div class="card">
+<h2>Lead List</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Status</th>
+<th>Delete</th>
+</tr>
+</thead>
+<tbody id="leadTable"></tbody>
+</table>
+</div></div><script>
+let leads = JSON.parse(localStorage.getItem("leads")) || [];
+
+function saveLeads(){
+localStorage.setItem("leads",JSON.stringify(leads));
+}
+
+function renderLeads(){
+const table=document.getElementById("leadTable");
+table.innerHTML="";
+
+leads.forEach((lead,index)=>{
+let row=`<tr>
+<td>${lead.name}</td>
+<td>${lead.email}</td>
+<td>${lead.status}</td>
+<td><button onclick="deleteLead(${index})">Delete</button></td>
+</tr>`;
+
+table.innerHTML+=row;
+});
+}
+
+function addLead(){
+let name=document.getElementById("name").value;
+let email=document.getElementById("email").value;
+let status=document.getElementById("status").value;
+
+if(name==""||email==""){
+alert("Please fill all fields");
+return;
+}
+
+leads.push({name,email,status});
+saveLeads();
+renderLeads();
+
+name="";
+email="";
+}
+
+function deleteLead(index){
+leads.splice(index,1);
+saveLeads();
+renderLeads();
+}
+
+renderLeads();
+</script></body>
+</html>
